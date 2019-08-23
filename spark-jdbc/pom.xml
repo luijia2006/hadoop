@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.we</groupId>
+		<artifactId>we-web-parent</artifactId>
+		<version>3.1.0</version>
+	</parent>
+	<artifactId>spark-jdbc</artifactId>
+	<packaging>war</packaging>
+	<name>spark-jdbc</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.we.base.utils</groupId>
+			<artifactId>we-base-utils</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- 先引用dubbo在引用sdk -->
+		<dependency>
+			<groupId>com.we</groupId>
+			<artifactId>we-dubbo</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.we.core.idgen</groupId>
+			<artifactId>we-core-idgen</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.we.swagger</groupId>
+			<artifactId>we-swagger</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- 配置中心 -->
+		<dependency>
+			<groupId>com.ctrip.framework.apollo</groupId>
+			<artifactId>apollo-client</artifactId>
+			<version>0.10.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-jdbc</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>spark-jdbc</finalName>
+	</build>
+</project>

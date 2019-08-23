@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	   xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:apollo="http://www.ctrip.com/schema/apollo"
+	   xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd  
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.ctrip.com/schema/apollo http://www.ctrip.com/schema/apollo.xsd"
+	   default-lazy-init="true">
+	<!-- 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。 -->
+	<!-- base-package 如果多个，用“,”分隔 -->
+	<context:component-scan base-package="com.we,com.qdedu">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- 打开aop 注解 -->
+	<aop:aspectj-autoproxy />
+
+	<!-- 引入配置文件 -->
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:config/*.properties</value>
+			</list>
+		</property>
+		<!-- 设置编码格式 -->
+		<property name="fileEncoding" value="UTF-8"></property>
+	</bean>
+	<bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		<property name="properties" ref="configProperties" />
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+	</bean>
+
+	<import resource="database.xml" />
+	<import resource="jedis.xml" />
+	<import resource="ftl.xml" />
+	<import resource="aop.xml" />
+	<import resource="swagger.xml" />
+	<import resource="spring-data-redis.xml" />
+	<import resource="dubbo/dubbo-common.xml" />
+	<import resource="dubbo/dubbo-base-provider.xml" />
+	<import resource="dubbo/dubbo-idgen-consumer.xml" />
+
+	<!-- 启动加载 -->
+	<bean id="SpringContextUtil" class="com.we.core.web.util.SpringContextUtil" />
+	<bean id="WeSetup" class="com.qdedu.Setup" />
+
+	<!-- 异常处理 -->
+	<!--<bean id="handlerExceptionResolver" class="com.we.core.web.exception.ExceptionResolver" />
+-->
+	<!-- druid spring monitor setting -->
+	<bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor" />
+	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+		<property name="patterns">
+			<list>
+				<value>com.qdedu.service.*</value>
+				<value>com.qdedu.dao.*</value>
+			</list>
+		</property>
+	</bean>
+	<aop:config proxy-target-class="true">
+		<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />
+	</aop:config>
+
+
+	<bean id="idGen" class="com.we.core.idgen.service.SnowflakeIdGen">
+		<property name="workerIdBaseService" ref="workerIdBaseService"/>
+		<property name="serviceName" value="${service.name}"/>
+		<property name="serviceVersion" value="${service.version}"/>
+	</bean>
+</beans>  

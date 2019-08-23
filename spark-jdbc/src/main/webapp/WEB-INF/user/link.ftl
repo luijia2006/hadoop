@@ -1,0 +1,1 @@
+<a href='/user/detail.html?id=${user.id}' title='${user.name}' target='_blank'>${user.name}</a>

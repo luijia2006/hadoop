@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 参考：https://www.cnblogs.com/linjiqin/p/5859153.html -->
+    <!-- 应用配置，用于配置当前应用信息，name服务名称，owner负责人，organization机构 -->
+    <dubbo:application name="${service.name}" owner="${dubbo.registry.owner}" organization="qdedu"/>
+
+    <!-- 使用multicast广播注册中心暴露服务地址 -->
+    <dubbo:registry address="${dubbo.registry.address}" timeout="500000" id="base" />
+
+    <!-- 用dubbo协议在端口（默认:20880）暴露服务，协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受 -->
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" />
+
+</beans>
