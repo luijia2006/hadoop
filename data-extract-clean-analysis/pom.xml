@@ -102,6 +102,13 @@
             <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
+        <dependency>
+            <classifier>hadoop2</classifier>
+            <groupId>org.apache.mrunit</groupId>
+            <artifactId>mrunit</artifactId>
+            <version>1.1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
